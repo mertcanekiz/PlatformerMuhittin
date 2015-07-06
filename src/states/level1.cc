@@ -13,7 +13,7 @@ void Level1::init()
 
 void Level1::input(SDL_Event event)
 {
-
+	player->input(event);
 }
 
 void Level1::update()
