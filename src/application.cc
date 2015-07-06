@@ -31,6 +31,7 @@ void Application::input(SDL_Event event)
 {
 	if(event.type == SDL_QUIT)
 		stop();
+	currentState->input(event);
 }
 
 void Application::update()
