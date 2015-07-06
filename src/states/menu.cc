@@ -41,7 +41,7 @@ void Menu::select()
 	switch(currentSelection)
 	{
 		case 0:
-			//start
+			Application::getInstance().changeState(GameState::LEVEL1);
 			break;
 		case 1:
 			//help

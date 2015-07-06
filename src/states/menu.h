@@ -9,7 +9,7 @@ class Menu : public GameState
 
 public:
 	Menu();
-	virtual ~Menu() {};
+	virtual ~Menu() {}
 
 	void init();
 	void input(SDL_Event);
