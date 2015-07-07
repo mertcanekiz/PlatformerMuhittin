@@ -15,7 +15,8 @@ void Splash::init()
 
 void Splash::input(SDL_Event event)
 {
-
+	if(event.type == SDL_KEYDOWN)
+		Application::getInstance().changeState(GameState::MENU);
 }
 
 void Splash::update()
