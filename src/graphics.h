@@ -16,6 +16,7 @@ public:
 	static bool init();
 	static SDL_Texture* createTextureFromText(std::string, TTF_Font*, SDL_Color);
 	static SDL_Texture* loadTexture(const char*);
+	static SDL_Texture* loadTexture(std::string);
 	static void renderTexture(SDL_Texture*, int, int);
 	static void fillRect(int, int, int, int, SDL_Color);
 	static void cleanUp();

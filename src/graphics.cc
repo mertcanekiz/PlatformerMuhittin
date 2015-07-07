@@ -57,6 +57,11 @@ SDL_Texture* Graphics::loadTexture(const char* filename)
 	return texture;
 }
 
+SDL_Texture* Graphics::loadTexture(std::string filename)
+{
+	return Graphics::loadTexture(filename.c_str());
+}
+
 SDL_Texture* Graphics::createTextureFromText(std::string text, TTF_Font* font, SDL_Color color)
 {
 	SDL_Surface* textSurface = TTF_RenderText_Blended(font, text.c_str(), color);
