@@ -23,6 +23,9 @@ void Player::input(SDL_Event event)
 			case SDLK_a:
 				directions[1] = true;
 				break;
+			case SDLK_w:
+				jump = true;
+				break;
 		}
 	}
 
@@ -35,6 +38,9 @@ void Player::input(SDL_Event event)
 				break;
 			case SDLK_a:
 				directions[1] = false;
+				break;
+			case SDLK_w:
+				jump = false;
 				break;
 		}
 	}
@@ -70,7 +76,7 @@ void Player::update()
 	if(velocity.x < -MAX_VELOCITY)
 		velocity.x = -MAX_VELOCITY;
 
-	if(touchingGround)
+	if(touchingGround && jump)
 	{
 		velocity.y = JUMP_ACCELERATION;
 	}
@@ -88,18 +94,11 @@ void Player::update()
 	{
 		touchingGround = false;
 	}
-
-
-
-
 }
 
 void Player::render()
 {
 	Graphics::fillRect((int)position.x, (int)position.y, WIDTH, HEIGHT, {0xff, 0x00, 0x00});
-	// Graphics::renderTexture(Graphics::createTextureFromText(std::string("jumped: " + (jumped ? "true" : "false")), Graphics::DEFAULTFONT, {0xff, 0xff, 0xff}), 10, 10);
-	// Graphics::renderTexture(Graphics::createTextureFromText(std::string("touch: " + (touchingGround ? "true" : "false")), Graphics::DEFAULTFONT, {0xff, 0xff, 0xff}), 10, 35);
-
 }
 
 void Player::setPosition(vec2 position)

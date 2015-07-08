@@ -31,7 +31,7 @@ private:
 
 	bool directions[2];
 	bool touchingGround;
-	bool jumped;
+	bool jump;
 
 
 };
