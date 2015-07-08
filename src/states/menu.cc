@@ -30,14 +30,14 @@ void Menu::input(SDL_Event event)
 			buttons[currentSelection].selected = false;
 			currentSelection--;
 			if(currentSelection == -1)
-				currentSelection = options.size() - 1;
+				currentSelection = NUM_BUTTONS - 1;
 			buttons[currentSelection].selected = true;
 		}
 		if(event.key.keysym.sym == SDLK_DOWN)
 		{
 			buttons[currentSelection].selected = false;
 			currentSelection++;
-			if(currentSelection == options.size())
+			if(currentSelection == NUM_BUTTONS)
 				currentSelection = 0;
 			buttons[currentSelection].selected = true;
 		}

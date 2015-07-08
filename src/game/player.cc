@@ -1,5 +1,6 @@
 #include "player.h"
 #include "../application.h"
+#include <string>
 
 Player::Player(vec2 position)
 {
@@ -41,6 +42,8 @@ void Player::input(SDL_Event event)
 
 void Player::update()
 {
+	velocity += acceleration;
+
 	if(directions[0])
 	{
 		acceleration.x = HORIZONTAL_ACCELERATION;
@@ -62,27 +65,41 @@ void Player::update()
 		}
 	}
 
-	if(position.y + HEIGHT >= Application::SCREEN_HEIGHT)
-	{
-		acceleration.y = 0;
-		velocity.y = 0;
-
-		position.y += Application::SCREEN_HEIGHT - position.y - HEIGHT;
-	}
-
-	velocity += acceleration;
-	position += velocity;
-
 	if(velocity.x > MAX_VELOCITY)
 		velocity.x = MAX_VELOCITY;
 	if(velocity.x < -MAX_VELOCITY)
 		velocity.x = -MAX_VELOCITY;
+
+	if(touchingGround)
+	{
+		velocity.y = JUMP_ACCELERATION;
+	}
+
+	position += velocity;
+
+	if(position.y + HEIGHT >= Application::SCREEN_HEIGHT)
+	{
+		position.y += Application::SCREEN_HEIGHT - position.y - HEIGHT;
+
+		velocity.y = 0;
+		touchingGround = true;
+	}
+	else
+	{
+		touchingGround = false;
+	}
+
+
+
 
 }
 
 void Player::render()
 {
 	Graphics::fillRect((int)position.x, (int)position.y, WIDTH, HEIGHT, {0xff, 0x00, 0x00});
+	// Graphics::renderTexture(Graphics::createTextureFromText(std::string("jumped: " + (jumped ? "true" : "false")), Graphics::DEFAULTFONT, {0xff, 0xff, 0xff}), 10, 10);
+	// Graphics::renderTexture(Graphics::createTextureFromText(std::string("touch: " + (touchingGround ? "true" : "false")), Graphics::DEFAULTFONT, {0xff, 0xff, 0xff}), 10, 35);
+
 }
 
 void Player::setPosition(vec2 position)

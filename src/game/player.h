@@ -27,7 +27,11 @@ private:
 	const float GRAVITY_ACCELERATION = 0.3f;
 	const float HORIZONTAL_ACCELERATION = 0.1f;
 	const float MAX_VELOCITY = 3.0f;
+	const float JUMP_ACCELERATION = -4.0f;
+
 	bool directions[2];
+	bool touchingGround;
+	bool jumped;
 
 
 };
