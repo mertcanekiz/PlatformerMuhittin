@@ -15,7 +15,7 @@ public:
 	virtual void render() = 0;
 
 protected:
-	vec2 position, velocity, acceleration;
+	vec2 position, size, velocity, acceleration;
 
 };
 

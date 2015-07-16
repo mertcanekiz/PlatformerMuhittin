@@ -86,4 +86,5 @@ bool vec2::operator!=(const vec2& v)
 std::ostream& operator<<(std::ostream& out, vec2& v)
 {
 	out << v.x << ", " << v.y;
+	return out;
 }

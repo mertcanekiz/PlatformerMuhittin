@@ -12,15 +12,38 @@ int Application::execute()
 
 	Application::changeState(GameState::SPLASH);
 
+	unsigned int lastTime = SDL_GetTicks();
+	double ms = 1000.0 / 60.0;
+	double delta = 0.0;
+	int updates = 0, frames = 0;
+	unsigned int timer = SDL_GetTicks();
+
 	while(running)
 	{
+		unsigned int now = SDL_GetTicks();
+		delta += (now - lastTime) / ms;
+		lastTime = now;
 		while(SDL_PollEvent(&event))
 		{
 			input(event);
 		}
+		if(delta >= 1.0)
+		{
+			update();
+			updates++;
+			delta--;
+		}
+			render();
+			frames++;
 
-		update();
-		render();
+		if(SDL_GetTicks() - timer > 1000)
+		{
+			timer += 1000;
+			std::cout << updates << " ups, " << frames << " fps" << std::endl;
+			frames = 0;
+			updates = 0;
+		}
+
 	}
 
 	cleanUp();
@@ -68,7 +91,7 @@ bool Application::initialize()
 		return false;
 	}
 
-	window = SDL_CreateWindow("PlatformerMuhittin", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+	window = SDL_CreateWindow("PlatformerTeddy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		SCREEN_WIDTH, SCREEN_HEIGHT, 0);
 
 	if(window == nullptr)
@@ -78,7 +101,7 @@ bool Application::initialize()
 		return false;
 	}
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED );
 
 	if(renderer == nullptr)
 	{
@@ -98,6 +121,7 @@ bool Application::initialize()
 
 void Application::cleanUp()
 {
+	GameState::cleanUp();
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();

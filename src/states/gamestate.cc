@@ -28,4 +28,5 @@ void GameState::cleanUp()
 {
 	delete splash;
 	delete menu;
+	delete level1;
 }

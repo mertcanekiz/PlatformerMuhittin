@@ -5,10 +5,16 @@
 Player::Player(vec2 position)
 {
 	this->position = position;
+	this->size = vec2(WIDTH, HEIGHT);
 	velocity = vec2(0, 0);
 	acceleration = vec2(0, GRAVITY_ACCELERATION);
 	directions[0] = false;
 	directions[1] = false;
+	jump = false;
+	// boundingBox.x = position.x;
+	// boundingBox.y = position.y + 10;
+	// boundingBox.w = WIDTH;
+	// boundingBox.h = 4;
 }
 
 void Player::input(SDL_Event event)
@@ -17,10 +23,10 @@ void Player::input(SDL_Event event)
 	{
 		switch(event.key.keysym.sym)
 		{
-			case SDLK_d:
+			case KEY_RIGHT:
 				directions[0] = true;
 				break;
-			case SDLK_a:
+			case KEY_LEFT:
 				directions[1] = true;
 				break;
 			case SDLK_w:
@@ -33,10 +39,10 @@ void Player::input(SDL_Event event)
 	{
 		switch(event.key.keysym.sym)
 		{
-			case SDLK_d:
+			case KEY_RIGHT:
 				directions[0] = false;
 				break;
-			case SDLK_a:
+			case KEY_LEFT:
 				directions[1] = false;
 				break;
 			case SDLK_w:
@@ -60,9 +66,9 @@ void Player::update()
 	}
 	else
 	{
-		if(velocity.x > 0.01f)
+		if(velocity.x > 0.1f)
 			acceleration.x = -HORIZONTAL_ACCELERATION;
-		else if(velocity.x < -0.01f)
+		else if(velocity.x < -0.1f)
 			acceleration.x = HORIZONTAL_ACCELERATION;
 		else
 		{
@@ -82,23 +88,14 @@ void Player::update()
 	}
 
 	position += velocity;
-
-	if(position.y + HEIGHT >= Application::SCREEN_HEIGHT)
-	{
-		position.y += Application::SCREEN_HEIGHT - position.y - HEIGHT;
-
-		velocity.y = 0;
-		touchingGround = true;
-	}
-	else
-	{
-		touchingGround = false;
-	}
+	// boundingBox.x = (int)position.x;
+	// boundingBox.y = (int)position.y + 10;
 }
 
 void Player::render()
 {
 	Graphics::fillRect((int)position.x, (int)position.y, WIDTH, HEIGHT, {0xff, 0x00, 0x00});
+	//Graphics::fillRect(boundingBox.x, boundingBox.y, boundingBox.w, boundingBox.h, {0x00, 0xff, 0xff});
 }
 
 void Player::setPosition(vec2 position)

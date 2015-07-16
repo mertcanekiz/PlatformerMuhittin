@@ -44,23 +44,35 @@ void Graphics::fillRect(int x, int y, int w, int h, SDL_Color color)
 	SDL_RenderFillRect(renderer, &r);
 }
 
-SDL_Texture* Graphics::loadTexture(const char* filename)
+SDL_Texture* Graphics::loadTexture(const char* filename, SDL_Color color)
 {
-	SDL_Texture* texture = IMG_LoadTexture(renderer, filename);
+	SDL_Texture* texture = nullptr;
 
-	if(texture == nullptr)
+	SDL_Surface* loadedSurface = IMG_Load(filename);
+	if(loadedSurface == nullptr)
+		std::cout << "Could not load image: " << filename << ": " << IMG_GetError() << std::endl;
+	else
 	{
-		std::cout << "Could not load texture from " << filename << ": " << IMG_GetError() << std::endl;
-		exit(1);
+		if(color.r != -1)
+			SDL_SetColorKey(loadedSurface, SDL_TRUE, 0xff00ff);
+		texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+
+		if(texture == nullptr)
+			std::cout << "Could not load texture: " << filename << ": " << IMG_GetError() << std::endl;
+
+		SDL_FreeSurface(loadedSurface);
 	}
+
+	std::cout << "Loaded texture: " << filename << std::endl;
 
 	return texture;
 }
 
-SDL_Texture* Graphics::loadTexture(std::string filename)
+SDL_Texture* Graphics::loadTexture(std::string filename, SDL_Color color)
 {
-	return Graphics::loadTexture(filename.c_str());
+	return Graphics::loadTexture(filename.c_str(), color);
 }
+
 
 SDL_Texture* Graphics::createTextureFromText(std::string text, TTF_Font* font, SDL_Color color)
 {
@@ -92,6 +104,19 @@ void Graphics::renderTexture(SDL_Texture* texture, int x, int y)
 	dst.x = x;
 	dst.y = y;
 	SDL_QueryTexture(texture, nullptr, nullptr, &dst.w, &dst.h);
+	SDL_RenderCopy(renderer, texture, nullptr, &dst);
+}
+
+void Graphics::renderTexture2x(SDL_Texture* texture, int x, int y)
+{
+	if(texture == nullptr) return;
+
+	SDL_Rect dst;
+	dst.x = x;
+	dst.y = y;
+	SDL_QueryTexture(texture, nullptr, nullptr, &dst.w, &dst.h);
+	dst.w *= 2;
+	dst.h *= 2;
 	SDL_RenderCopy(renderer, texture, nullptr, &dst);
 }
 

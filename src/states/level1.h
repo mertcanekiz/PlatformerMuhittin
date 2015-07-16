@@ -3,13 +3,14 @@
 
 #include "gamestate.h"
 #include "../game/player.h"
+#include "../game/tilemap.h"
 #include "../math/vec2.h"
 
 class Level1 : public GameState
 {
 public:
 	Level1();
-	virtual ~Level1(){ delete player; }
+	virtual ~Level1();
 
 	void init();
 	void input(SDL_Event event);
@@ -17,7 +18,8 @@ public:
 	void render();
 
 private:
-	Player *player;
+	Player player;
+	TileMap tilemap;
 };
 
 #endif
