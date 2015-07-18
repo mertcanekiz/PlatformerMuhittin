@@ -24,7 +24,7 @@ public:
 	static const int SCREEN_WIDTH = 640;
 	static const int SCREEN_HEIGHT = 480;
 
-	inline SDL_Renderer* getRenderer() const { return renderer; }
+	inline SDL_Window* getWindow() const { return window; }
 
 private:
 	Application() {}

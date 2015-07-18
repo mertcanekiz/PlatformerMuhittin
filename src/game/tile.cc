@@ -22,5 +22,5 @@ void Tile::loadImages()
 
 void Tile::render()
 {
-	Graphics::renderTexture2x(image, (int)position.x, (int)position.y);
+	Graphics::renderTexture(image, (int)position.x, (int)position.y, 2.0f);
 }

@@ -27,6 +27,7 @@ public:
 	inline const vec2& getSize() const { return size; }
 	inline const vec2& getAcceleration() const { return acceleration; }
 	inline const vec2& getVelocity() const { return velocity; }
+	inline bool getDirection(int i) const { return directions[i]; }
 
 	void setPosition(vec2);
 	void setVelocity(vec2);
@@ -34,14 +35,17 @@ public:
 	inline void setTouchingGround(bool b) { this->touchingGround = b; }
 
 private:
-	const float GRAVITY_ACCELERATION = 0.4f;
-	const float HORIZONTAL_ACCELERATION = 0.15f;
-	const float MAX_VELOCITY = 4.0f;
-	const float JUMP_ACCELERATION = -6.0f;
+	const float GRAVITY_ACCELERATION = 0.3f;
+	const float HORIZONTAL_ACCELERATION = 0.1f;
+	const float HORIZONTAL_SPRINT_ACCELERATION = 0.17f;
+	const float MAX_VELOCITY = 3.0f;
+	const float MAX_SPRINT_VELOCITY = 4.5f;
+	const float JUMP_ACCELERATION = -5.0f;
 
 	bool directions[2];
 	bool touchingGround;
 	bool jump;
+	bool sprint;
 
 
 };

@@ -17,13 +17,12 @@ public:
 	static SDL_Texture* createTextureFromText(std::string, TTF_Font*, SDL_Color);
 	static SDL_Texture* loadTexture(const char*, SDL_Color = {-1,-1,-1});
 	static SDL_Texture* loadTexture(std::string, SDL_Color = {-1,-1,-1});
-	static void renderTexture(SDL_Texture*, int, int);
-	static void renderTexture2x(SDL_Texture*, int, int);
-	static void fillRect(int, int, int, int, SDL_Color);
+	static void renderTexture(SDL_Texture*, int, int, float = 1.0f);
+	static void fillRect(int, int, int, int, SDL_Color = {0xff, 0xff, 0xff});
 	static void cleanUp();
 	static SDL_Texture* getSubImageFromSpriteSheet(SDL_Texture*, unsigned int);
 
-	static TTF_Font* DEFAULTFONT;
+	static TTF_Font* DEFAULT_FONT;
 
 private:
 	static SDL_Renderer* renderer;

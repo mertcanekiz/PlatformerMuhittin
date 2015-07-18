@@ -11,6 +11,7 @@ Player::Player(vec2 position)
 	directions[0] = false;
 	directions[1] = false;
 	jump = false;
+	sprint = false;
 	// boundingBox.x = position.x;
 	// boundingBox.y = position.y + 10;
 	// boundingBox.w = WIDTH;
@@ -32,6 +33,9 @@ void Player::input(SDL_Event event)
 			case SDLK_w:
 				jump = true;
 				break;
+			case SDLK_LSHIFT:
+				sprint = true;
+				break;
 		}
 	}
 
@@ -48,6 +52,9 @@ void Player::input(SDL_Event event)
 			case SDLK_w:
 				jump = false;
 				break;
+			case SDLK_LSHIFT:
+				sprint = false;
+				break;
 		}
 	}
 }
@@ -58,11 +65,11 @@ void Player::update()
 
 	if(directions[0])
 	{
-		acceleration.x = HORIZONTAL_ACCELERATION;
+		acceleration.x = sprint ? HORIZONTAL_SPRINT_ACCELERATION : HORIZONTAL_ACCELERATION;
 	}
 	else if(directions[1])
 	{
-		acceleration.x = -HORIZONTAL_ACCELERATION;
+		acceleration.x = sprint ? -HORIZONTAL_SPRINT_ACCELERATION : -HORIZONTAL_ACCELERATION;
 	}
 	else
 	{
@@ -77,10 +84,20 @@ void Player::update()
 		}
 	}
 
-	if(velocity.x > MAX_VELOCITY)
-		velocity.x = MAX_VELOCITY;
-	if(velocity.x < -MAX_VELOCITY)
-		velocity.x = -MAX_VELOCITY;
+	if(!sprint)
+	{
+		if(velocity.x > MAX_VELOCITY)
+			velocity.x = MAX_VELOCITY;
+		if(velocity.x < -MAX_VELOCITY)
+			velocity.x = -MAX_VELOCITY;
+	}
+	else
+	{
+		if(velocity.x > MAX_SPRINT_VELOCITY)
+			velocity.x = MAX_SPRINT_VELOCITY;
+		if(velocity.x < -MAX_SPRINT_VELOCITY)
+			velocity.x = -MAX_SPRINT_VELOCITY;
+	}
 
 	if(touchingGround && jump)
 	{
@@ -94,7 +111,7 @@ void Player::update()
 
 void Player::render()
 {
-	Graphics::fillRect((int)position.x, (int)position.y, WIDTH, HEIGHT, {0xff, 0x00, 0x00});
+	Graphics::fillRect((int)position.x, (int)position.y, WIDTH, HEIGHT, {(int)(0.6*255), 0x00, 0x00});
 	//Graphics::fillRect(boundingBox.x, boundingBox.y, boundingBox.w, boundingBox.h, {0x00, 0xff, 0xff});
 }
 

@@ -1,7 +1,7 @@
 #include "graphics.h"
 #include "application.h"
 
-TTF_Font* Graphics::DEFAULTFONT = nullptr;
+TTF_Font* Graphics::DEFAULT_FONT = nullptr;
 SDL_Renderer* Graphics::renderer = nullptr;
 
 bool Graphics::init()
@@ -9,28 +9,32 @@ bool Graphics::init()
 	if(!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
 	{
 		std::cout << "Could not initialize SDL_image: " << IMG_GetError() << std::endl;
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL_image Error", "Could not initialize SDL_image", Application::getInstance().getWindow());
 		return false;
 	}
 
 	if(TTF_Init() == -1)
 	{
 		std::cout << "Could not initialize SDL_ttf: " << TTF_GetError() << std::endl;
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL_ttf Error", "Could not initialize SDL_ttf", Application::getInstance().getWindow());
 		return false;
 	}
 
-	DEFAULTFONT = TTF_OpenFont("res/font.ttf", 18);
+	DEFAULT_FONT = TTF_OpenFont("res/font.ttf", 18);
 
-	if(DEFAULTFONT == nullptr)
+	if(DEFAULT_FONT == nullptr)
 	{
 		std::cout << "Could not load font: " << TTF_GetError() << std::endl;
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Could not read font", "Could not load font file from res/font.ttf", Application::getInstance().getWindow());
 		return false;
 	}
 
-	renderer = Application::getInstance().getRenderer();
+	renderer = SDL_GetRenderer(Application::getInstance().getWindow());
 
 	if(renderer == nullptr)
 	{
-		std::cout << "Could not grab renderer" << std::endl;
+		std::cout << "Could not get renderer from window" << std::endl;
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL Error", "Could not get renderer from window", Application::getInstance().getWindow());
 		return false;
 	}
 
@@ -50,7 +54,11 @@ SDL_Texture* Graphics::loadTexture(const char* filename, SDL_Color color)
 
 	SDL_Surface* loadedSurface = IMG_Load(filename);
 	if(loadedSurface == nullptr)
+	{
 		std::cout << "Could not load image: " << filename << ": " << IMG_GetError() << std::endl;
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL_image Error", "Could not load image", Application::getInstance().getWindow());
+
+	}
 	else
 	{
 		if(color.r != -1)
@@ -58,7 +66,10 @@ SDL_Texture* Graphics::loadTexture(const char* filename, SDL_Color color)
 		texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
 
 		if(texture == nullptr)
-			std::cout << "Could not load texture: " << filename << ": " << IMG_GetError() << std::endl;
+		{
+			std::cout << "Could not create texture: " << filename << ": " << IMG_GetError() << std::endl;
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL_image Error", "Could not create texture", Application::getInstance().getWindow());
+		}
 
 		SDL_FreeSurface(loadedSurface);
 	}
@@ -82,13 +93,17 @@ SDL_Texture* Graphics::createTextureFromText(std::string text, TTF_Font* font, S
 	if(textSurface == nullptr)
 	{
 		std::cout << "Could not render text surface: " << TTF_GetError() << std::endl;
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL_ttf Error", "Could not render text surface", Application::getInstance().getWindow());
 	}
 	else
 	{
 		texture = SDL_CreateTextureFromSurface(renderer, textSurface);
 
 		if(texture == nullptr)
+		{
 			std::cout << "Could not create texture from text surface: " << SDL_GetError() << std::endl;
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL Error", "Could not creat texture from text surface", Application::getInstance().getWindow());
+		}
 
 		SDL_FreeSurface(textSurface);
 	}
@@ -96,7 +111,7 @@ SDL_Texture* Graphics::createTextureFromText(std::string text, TTF_Font* font, S
 	return texture;
 }
 
-void Graphics::renderTexture(SDL_Texture* texture, int x, int y)
+void Graphics::renderTexture(SDL_Texture* texture, int x, int y, float scale)
 {
 	if(texture == nullptr) return;
 
@@ -104,24 +119,13 @@ void Graphics::renderTexture(SDL_Texture* texture, int x, int y)
 	dst.x = x;
 	dst.y = y;
 	SDL_QueryTexture(texture, nullptr, nullptr, &dst.w, &dst.h);
-	SDL_RenderCopy(renderer, texture, nullptr, &dst);
-}
-
-void Graphics::renderTexture2x(SDL_Texture* texture, int x, int y)
-{
-	if(texture == nullptr) return;
-
-	SDL_Rect dst;
-	dst.x = x;
-	dst.y = y;
-	SDL_QueryTexture(texture, nullptr, nullptr, &dst.w, &dst.h);
-	dst.w *= 2;
-	dst.h *= 2;
+	dst.w *= scale;
+	dst.h *= scale;
 	SDL_RenderCopy(renderer, texture, nullptr, &dst);
 }
 
 void Graphics::cleanUp()
 {
-	TTF_CloseFont(DEFAULTFONT);
-	DEFAULTFONT = nullptr;
+	TTF_CloseFont(DEFAULT_FONT);
+	DEFAULT_FONT = nullptr;
 }

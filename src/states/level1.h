@@ -5,12 +5,13 @@
 #include "../game/player.h"
 #include "../game/tilemap.h"
 #include "../math/vec2.h"
+#include "../graphics.h"
 
 class Level1 : public GameState
 {
 public:
 	Level1();
-	virtual ~Level1();
+	virtual ~Level1() {}
 
 	void init();
 	void input(SDL_Event event);
@@ -20,6 +21,7 @@ public:
 private:
 	Player player;
 	TileMap tilemap;
+	SDL_Texture* bg;
 };
 
 #endif

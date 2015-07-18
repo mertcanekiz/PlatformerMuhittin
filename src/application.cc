@@ -33,8 +33,8 @@ int Application::execute()
 			updates++;
 			delta--;
 		}
-			render();
-			frames++;
+		render();
+		frames++;
 
 		if(SDL_GetTicks() - timer > 1000)
 		{
@@ -88,6 +88,7 @@ bool Application::initialize()
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		std::cout << "Could not initialize SDL: " << SDL_GetError() << std::endl;
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL Error", "Could not initialize SDL", Application::getInstance().getWindow());
 		return false;
 	}
 
@@ -96,16 +97,18 @@ bool Application::initialize()
 
 	if(window == nullptr)
 	{
-		std::cout << "Could not create window: " << SDL_GetError() << std::endl;
+		std::cout << "Could not create SDL window: " << SDL_GetError() << std::endl;
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL Error", "Could not create SDL window", Application::getInstance().getWindow());
 		SDL_Quit();
 		return false;
 	}
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED );
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	if(renderer == nullptr)
 	{
 		std::cout << "Could not create renderer: " << SDL_GetError() << std::endl;
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "SDL Error", "Could not create SDL renderer", Application::getInstance().getWindow());
 		SDL_DestroyWindow(window);
 		SDL_Quit();
 		return false;
